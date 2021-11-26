@@ -7,14 +7,15 @@ router.post('/',async (req,res) => {
     const  result = await deviceController.createProduct(product)
     res.sendStatus(201)
 })
-router.get('/category/:category/:price?',async (req, res) => {
+router.get('/category/:category',async (req, res) => {
     const category = req.params.category
-    const price = req.params.price
+    const query = req.query
+
     // const price = req.params.price ? req.params.price : ''
-    const  result = await deviceController.getCategoryProduct(category, price)
+    const  result = await deviceController.getCategoryProduct(category, query.price, query.color, query.size)
     res.send(result)
 })
-router.get('/id/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     const {id} = req.params
     const  result = await deviceController.getProductById(id)
     res.send(result)
