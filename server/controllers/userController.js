@@ -18,9 +18,9 @@ async function admin (adminPassword,adminLogin){
     const result =  await conn.query(queryStr)
     console.log(JSON.parse(JSON.stringify(result)));
     if (result){
-        return result;
+        return true;
     }
-    return result;
+    return false;
 
 }
 async function checkUser(customerId,customerName,customerSex,customerPhone, customerEmail, customerAddress){
