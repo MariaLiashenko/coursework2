@@ -1,32 +1,36 @@
 const db = require('../db')
 
-async function createOrder(data){
+async function main(data){
     let products = data.products;
     let user = data.userData;
 
 
     let conn = await db.getConnection();
-    await conn.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
+
     await conn.beginTransaction();
     try {
         let queryUser = `INSERT INTO customers (customer_name,customer_sex,customer_phone, customer_email, customer_address)
         VALUES (?,?,?,?,?);`;
-        const [userid] = await conn.execute(queryUser, [user.name, user.sex, user.phone, user.email, user.address]);
 
+        const userResponse = await conn.query(queryUser, [user.name, user.sex, user.phone, user.email, user.address]);
+        const userid = await userResponse.insertId;
         let queryOrder = `INSERT INTO orders (customer_id) VALUES (?)`;
-        const [orderid] = await conn.execute(queryOrder, [userid]);
-
+        const ordersResponse = await conn.query(queryOrder, [userid]);
+        const orderid = await ordersResponse.insertId
         console.log(`Order created`);
 
-        let queryProduct = `INSERT INTO order_item (order_id, product_id, price) VALUES (?,?,?)`;
         let values = [];
         let pids = [];
         for (const product of products) {
-            values.push([orderid, product['product_id'], product.price]);
-            pids.push(product['product_id']);
+            values.push([orderid, product.pid, product.price]);
+            pids.push(product.pid);
         }
-        await conn.execute(queryProduct, [values]);
-        await conn.execute(
+        let queryProduct = `INSERT INTO order_item (order_id, product_id, price) VALUES (?,?,?)`;
+        for (const value of values) {
+            await conn.query(queryProduct, value);
+        }
+
+        await conn.query(
             `UPDATE products SET count_size=count_size - 1 WHERE product_id IN (?)`,
             pids
         );
@@ -38,10 +42,10 @@ async function createOrder(data){
         console.info('Rollback successful');
         return false;
     }
-
-    return true;
-
 }
+
+
+
 module.exports =  {
-    createOrder
+    main
 }

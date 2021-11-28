@@ -3,12 +3,18 @@
     const app = express();
     const cors = require('cors');
     const router = require('./routers/index')
+    const bodyParser = require('body-parser');
     const errorHandler = require('./middleAware/ErrorHandlingMiddlewere')
 
 
     app.use(cors({
         origin: '*'
     }));
+    // parse application/x-www-form-urlencoded
+    // app.use(bodyParser.urlencoded())
+
+// parse application/json
+    app.use(bodyParser.json())
     app.use('/', router)
     app.use('/static', express.static('static'));
 
@@ -33,9 +39,13 @@
     //     //res.sendStatus(200);
     //     //res.end();
     // });
+
+
+
+
+
     //Пуляем в самый конец, это разные виды ошибок
     app.use(errorHandler)
-
     app.listen(3001, () => {
         console.log("yes port 3001 work")
     });
