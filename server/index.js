@@ -7,9 +7,7 @@
     const errorHandler = require('./middleAware/ErrorHandlingMiddlewere')
 
 
-    app.use(cors({
-        origin: '*'
-    }));
+    app.use(cors());
     // parse application/x-www-form-urlencoded
     // app.use(bodyParser.urlencoded())
 

@@ -9,18 +9,20 @@ async function createUser(customerName,customerSex,customerPhone, customerEmail,
     const result =  await conn.query(queryStr)
     console.log(JSON.parse(JSON.stringify(result)));
     return result;
-
 }
-async function admin (adminPassword,adminLogin){
+
+async function admin (admin){
+    let status = {}
     let conn = await db.getConnection()
-    //`SELECT * FROM products WHERE product_id = '${id}'`
-    let queryStr = `SELECT admin WHERE admin_password = '${adminPassword}' AND admin_login = '${adminLogin}'`;
-    const result =  await conn.query(queryStr)
-    console.log(JSON.parse(JSON.stringify(result)));
-    if (result){
-        return true;
+    let queryStr = `SELECT admin_id FROM admin WHERE admin_login = '${admin.email}' AND admin_password = '${admin.password}'`;
+    const result =  await conn.query(queryStr);
+    if (result[0]){
+        status = {stat : true}
+        return status;
     }
-    return false;
+    status = {stat : false}
+    conn.release();
+    return status;
 
 }
 async function checkUser(customerId,customerName,customerSex,customerPhone, customerEmail, customerAddress){
@@ -34,9 +36,6 @@ async function checkUser(customerId,customerName,customerSex,customerPhone, cust
 
 }
 
-
-
 module.exports =  {
-    createUser,
     admin
 };
