@@ -35,7 +35,37 @@ async function checkUser(customerId,customerName,customerSex,customerPhone, cust
     return result;
 
 }
+    async function getCustomersWoman(){
+        let conn = await db.getConnection()
+        let queryStr = `SELECT * FROM customers WHERE customer_sex = 'жінка'`;
+        const result =  await conn.query(queryStr)
+        console.log(JSON.parse(JSON.stringify(result)));
+        conn.release()
+        return result
+
+    }
+    async function getCustomersMan(){
+        let conn = await db.getConnection()
+        let queryStr = `SELECT * FROM customers WHERE customer_sex = 'чоловік'`;
+        const result =  await conn.query(queryStr)
+        console.log(JSON.parse(JSON.stringify(result)));
+        conn.release()
+        return result
+
+    }
+    async function getCustomers(){
+        let conn = await db.getConnection()
+        let queryStr = `SELECT * FROM customers`;
+        const result =  await conn.query(queryStr)
+        console.log(JSON.parse(JSON.stringify(result)));
+        conn.release()
+        return result
+
+    }
 
 module.exports =  {
-    admin
+    admin,
+    getCustomersWoman,
+    getCustomersMan,
+    getCustomers
 };

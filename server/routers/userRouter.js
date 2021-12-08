@@ -20,4 +20,17 @@ router.post('/user/admin', async (req, res) => {
     const  result = await userController.admin(admin)
     res.send(result)
 })
+router.get('/customer/woman', async (req, res) => {
+    const  result = await userController.getCustomersWoman()
+    res.send(result)
+})
+router.get('/customer/man', async (req, res) => {
+    const  result = await userController.getCustomersMan()
+    res.send(result)
+})
+router.get('/customers', async (req, res) => {
+    const  result = await userController.getCustomers()
+    res.send(result)
+})
+
 module.exports = router
